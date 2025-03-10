@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Movie } from '../types/Movie';
 import { Actor } from '../types/Actor';
+import { API_URL } from '../components/config';
 
 export interface MovieWithActors extends Movie {
     actors: Actor[];
@@ -10,14 +11,12 @@ export function useMovieData() {
     const [movies, setMovies] = useState<MovieWithActors[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    let url = "http://sakila-db.c72ogo8s0ap6.eu-north-1.rds.amazonaws.com:8080";
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [moviesResponse, actorsResponse] = await Promise.all([
-                    fetch(url+"/films"),
-                    fetch(url+"/actors")
+                    fetch(API_URL+"/films"),
+                    fetch(API_URL+"/actors")
                 ]);
 
                 const moviesData: Movie[] = await moviesResponse.json();
