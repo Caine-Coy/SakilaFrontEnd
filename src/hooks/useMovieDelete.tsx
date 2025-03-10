@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 interface UseMovieDeleteProps {
     onMovieDeleted: (movieId: number) => void;
 }
-let url = "http://sakila-db.c72ogo8s0ap6.eu-north-1.rds.amazonaws.com:8080";
+let url = "http://localhost:8080";
 export function useMovieDelete({ onMovieDeleted }: UseMovieDeleteProps) {
     const deleteMovie = useCallback(async (movieId: number) => {
         try {
