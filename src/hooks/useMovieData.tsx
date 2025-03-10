@@ -10,13 +10,14 @@ export function useMovieData() {
     const [movies, setMovies] = useState<MovieWithActors[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    let url = "http://sakila-db.c72ogo8s0ap6.eu-north-1.rds.amazonaws.com:8080";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [moviesResponse, actorsResponse] = await Promise.all([
-                    fetch("http://localhost:8080/films"),
-                    fetch("http://localhost:8080/actors")
+                    fetch(url+"/films"),
+                    fetch(url+"/actors")
                 ]);
 
                 const moviesData: Movie[] = await moviesResponse.json();
