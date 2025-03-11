@@ -2,9 +2,9 @@ import { useState } from "react";
 import './FetchButton.css';
 import MovieCard from "./MovieCard";
 import { useMovieData, MovieWithActors } from "../hooks/useMovieData";
+import AIDescriptor from "./AIDescriptor";
 
 function FetchButton() {
-    // Fetch movie data
     const { movies, isLoading, error, getDetailedMovie } = useMovieData();
     const [randomMovie, setRandomMovie] = useState<MovieWithActors | null>(null);
     const [isLoadingDetails, setIsLoadingDetails] = useState(false);
@@ -40,13 +40,17 @@ function FetchButton() {
             >
                 {isLoadingDetails ? 'Loading...' : 'Get Random Movie'}
             </button>
-            {randomMovie && (
+            {randomMovie && 
+                <div>
                 <MovieCard
                     movie={randomMovie}
                     actors={randomMovie.actors}
                     featured={true}
                 />
-            )}
+                <AIDescriptor movie={randomMovie}/>
+                </div>
+            }
+            
         </div>
     );
 }
