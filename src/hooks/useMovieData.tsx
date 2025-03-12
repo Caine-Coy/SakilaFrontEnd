@@ -24,8 +24,8 @@ export function useMovieData() {
                 };
 
                 const [moviesResponse, actorsResponse] = await Promise.all([
-                    fetch(`${API_URL}films`, requestOptions),
-                    fetch(`${API_URL}actors`, requestOptions)
+                    fetch(`${API_URL}/films`, requestOptions),
+                    fetch(`${API_URL}/actors`, requestOptions)
                 ]);
 
                 if (!moviesResponse.ok || !actorsResponse.ok) {
