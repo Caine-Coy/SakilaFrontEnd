@@ -3,6 +3,7 @@ import { MovieWithActors } from '../hooks/useMovieData';
 import './MovieCard.css';
 import { Movie } from "../types/Movie";
 import { Actor } from "../types/Actor";
+import AIDescriptor from './AIDescriptor';
 
 interface MovieCardProps {
     movie: Movie;
@@ -112,6 +113,7 @@ function MovieCard({
                     <><h2>{displayMovie.title}</h2><p>Released: {displayMovie.releaseYear}</p></>
                 )}
                 {displayMovie.desc && <p>{displayMovie.desc}</p>}
+                {(featured && <AIDescriptor movie={movie}/>)}
                 {displayMovie.rating && <p>Age Rating: {displayMovie.rating}</p>}
                 {(featured || isExpanded) && actors && (
                     <div className="actors-section">

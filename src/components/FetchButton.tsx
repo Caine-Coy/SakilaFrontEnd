@@ -46,8 +46,7 @@ function FetchButton() {
                     movie={randomMovie}
                     actors={randomMovie.actors}
                     featured={true}
-                />
-                <AIDescriptor movie={randomMovie}/>
+                /> 
                 </div>
             }
             

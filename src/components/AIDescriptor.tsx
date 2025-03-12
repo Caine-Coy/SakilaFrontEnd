@@ -10,6 +10,7 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
     const [message, setMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const llmUrl = localStorage.getItem('llmUrl') || 'http://localhost:1234/v1';
 
     useEffect(() => {
         const generateMessage = async () => {
@@ -19,7 +20,7 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
 
                 const openai = new OpenAI({
                     apiKey: 'sk-no-key-required',
-                    baseURL: 'http://localhost:1234/v1',
+                    baseURL: llmUrl,
                     defaultHeaders: {
                         'Content-Type': 'application/json',
                     },
@@ -33,22 +34,30 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
                     }
                 } catch (e) {
                     console.error('Server check error:', e);
-                    throw new Error('LM Studio server is not running. Please start the server first.');
+                    throw new Error('Server check error');
                 }
                 if (movie) {
-                    const prompt = `Create a fun, imaginative backstory for this movie in 2-3 sentences: "${movie.title}" (${movie.releaseYear}). The movie is rated ${movie.rating} and is about: ${movie.desc}`;
+                    // Format actors names into a readable string
+                    const actorNames = movie.actors
+                        ? movie.actors.map(actor => `${actor.firstName} ${actor.lastName}`).join(', ')
+                        : 'Unknown actors';
+
+                    const prompt = `Create a fun, imaginative synopsis for this movie in 2-3 sentences: "${movie.title}" (${movie.releaseYear}).
+                    The movie is rated ${movie.rating} and is about: ${movie.desc}
+                    The movie stars ${actorNames}. Please come up with clever made up names for the characters, but then credit the actors for their roles in brackets.`;
+
                     const completion = await openai.chat.completions.create({
                         messages: [
                             {
                                 role: "system",
-                                content: "You are a creative movie expert who provides entertaining and imaginative movie descriptions. If given a movie, create an engaging fictional backstory. If not, recommend a movie."
+                                content: "You are a creative movie expert who provides entertaining and imaginative movie descriptions. Create an engaging description that mentions the cast."
                             },
                             {
                                 role: "user",
                                 content: prompt
                             }
                         ],
-                        model: "gdeepseek-r1-distill-qwen-7b",
+                        model: "hermes-3-llama-3.2-3b",
                         temperature: 0.8,
                         stream: false
                     });
@@ -73,10 +82,10 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
 
     return (
         <div className="ai-descriptor">
-            <h3>{movie ? 'AI Movie Background' : 'MovAI Recommends'}</h3>
+            <h3>MovAI Synopsis</h3>
             {error && <p className="error">{error}</p>}
             {isLoading ? (
-                <p>Thinking of something fun...</p>
+                <p>Generating a synopsis</p>
             ) : message && (
                 <p>{message}</p>
             )}

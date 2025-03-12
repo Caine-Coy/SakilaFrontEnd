@@ -11,13 +11,26 @@ export function useMovieData() {
     const [movies, setMovies] = useState<MovieWithActors[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                };
+
                 const [moviesResponse, actorsResponse] = await Promise.all([
-                    fetch(API_URL+"/films"),
-                    fetch(API_URL+"/actors")
+                    fetch(`${API_URL}films`, requestOptions),
+                    fetch(`${API_URL}actors`, requestOptions)
                 ]);
+
+                if (!moviesResponse.ok || !actorsResponse.ok) {
+                    throw new Error('Failed to fetch data from the server');
+                }
 
                 const moviesData: Movie[] = await moviesResponse.json();
                 const actorsData: Actor[] = await actorsResponse.json();
@@ -31,7 +44,8 @@ export function useMovieData() {
 
                 setMovies(moviesWithActors);
             } catch (error) {
-                setError('Failed to fetch movie data');
+                console.error('Fetch error:', error);
+                setError('Failed to fetch movie data. Please check your connection.');
             } finally {
                 setIsLoading(false);
             }
@@ -42,10 +56,19 @@ export function useMovieData() {
 
     const getDetailedMovie = async (movieId: number) => {
         try {
-            const response = await fetch(`http://localhost:8080/films/${movieId}`);
+            const response = await fetch(`${API_URL}films/${movieId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch movie details');
+            }
+            
             const detailedMovie = await response.json();
             const baseMovie = movies.find(m => m.id === movieId);
-            //merge actors into detailedMovie
             return { ...detailedMovie, actors: baseMovie?.actors || [] };
         } catch (error) {
             console.error('Error fetching movie details:', error);
