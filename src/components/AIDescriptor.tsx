@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import OpenAI from 'openai';
 import { Movie } from "../types/Movie";
+import { LLM_URL } from "../components/config";
 
 interface AIDescriptorProps {
     movie?: Movie;
@@ -10,17 +11,21 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
     const [message, setMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const llmUrl = localStorage.getItem('llmUrl') || 'http://localhost:1234/v1';
+    const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
+        // Skip if already initialized for this movie
+        const movieId = movie?.id;
+        if (isInitialized && !movieId) return;
+
         const generateMessage = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
-
+                
                 const openai = new OpenAI({
                     apiKey: 'sk-no-key-required',
-                    baseURL: llmUrl,
+                    baseURL: LLM_URL,
                     defaultHeaders: {
                         'Content-Type': 'application/json',
                     },
@@ -44,7 +49,7 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
 
                     const prompt = `Create a fun, imaginative synopsis for this movie in 2-3 sentences: "${movie.title}" (${movie.releaseYear}).
                     The movie is rated ${movie.rating} and is about: ${movie.desc}
-                    The movie stars ${actorNames}. Please come up with clever made up names for the characters, but then credit the actors for their roles in brackets.`;
+                    The movie stars are ${actorNames}. Please come up with clever made up names for the characters mentioned, but then credit the stars for their roles in brackets.`;
 
                     const completion = await openai.chat.completions.create({
                         messages: [
@@ -74,18 +79,19 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
                 setMessage("");
             } finally {
                 setIsLoading(false);
+                setIsInitialized(true);
             }
         };
 
         generateMessage();
-    }, [movie]); // Re-run when movie changes
+    }, [movie, isInitialized]); // Added isInitialized to dependencies
 
     return (
         <div className="ai-descriptor">
-            <h3>MovAI Synopsis</h3>
+            <h1>{movie ? 'AI Movie Synopsis' : 'Movie Recommendation'}</h1>
             {error && <p className="error">{error}</p>}
             {isLoading ? (
-                <p>Generating a synopsis</p>
+                <p>Generating content...</p>
             ) : message && (
                 <p>{message}</p>
             )}

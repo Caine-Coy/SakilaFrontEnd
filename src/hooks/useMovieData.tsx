@@ -56,7 +56,7 @@ export function useMovieData() {
 
     const getDetailedMovie = async (movieId: number) => {
         try {
-            const response = await fetch(`${API_URL}films/${movieId}`, {
+            const response = await fetch(`${API_URL}/films/${movieId}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
@@ -69,9 +69,17 @@ export function useMovieData() {
             
             const detailedMovie = await response.json();
             const baseMovie = movies.find(m => m.id === movieId);
-            return { ...detailedMovie, actors: baseMovie?.actors || [] };
+            
+            // Combine the detailed movie data with the base movie's actors
+            return {
+                ...detailedMovie,
+                actors: baseMovie?.actors || [],
+                desc: detailedMovie.desc || baseMovie?.desc, // Ensure description is included
+                rating: detailedMovie.rating || baseMovie?.rating
+            };
         } catch (error) {
             console.error('Error fetching movie details:', error);
+            // Return the base movie if detailed fetch fails
             return movies.find(m => m.id === movieId);
         }
     };

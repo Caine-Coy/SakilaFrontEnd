@@ -2,7 +2,6 @@ import { useState } from "react";
 import './FetchButton.css';
 import MovieCard from "./MovieCard";
 import { useMovieData, MovieWithActors } from "../hooks/useMovieData";
-import AIDescriptor from "./AIDescriptor";
 
 function FetchButton() {
     const { movies, isLoading, error, getDetailedMovie } = useMovieData();
