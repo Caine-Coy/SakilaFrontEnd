@@ -42,7 +42,7 @@ function App() {
                 <h1 className="colour">Random Movie Selector</h1>
                 <NavBar onStateChange={handleNavigation} isAdmin = {isAdmin} />
             </header>
-            {currentPage === Page.HOME && <FetchButton/>}
+            {currentPage === Page.HOME && <div><FetchButton/></div>}
             {currentPage === Page.SETTINGS && 
                 <Settings 
                     isAdmin={isAdmin} 
