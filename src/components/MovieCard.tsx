@@ -78,7 +78,7 @@ function MovieCard({
 
     return (
         <div
-            className={`movie-card ${featured || isExpanded ? 'featured' : ''}`}
+            className={`movie-card ${movie.title} ${featured || isExpanded ? 'featured' : ''}`}
             onMouseEnter={handleExpand}
             onMouseLeave={handleCollapse}
             onTouchStart={handleTouchStart}
