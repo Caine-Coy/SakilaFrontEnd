@@ -87,7 +87,7 @@ function MovieCard({
         >
             {isAdmin && (
                 <button
-                    className="delete-button"
+                    className={`${movie.title} delete-button`}
                     onClick={handleDelete}
                     title="Delete Movie"
                 >
