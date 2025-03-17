@@ -31,9 +31,9 @@ function MovieCard({
     const [isExpanded, setIsExpanded] = useState(false); 
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({
-        title: movie.title,
+        title: movie.title || '',
         desc: movie.desc || '',
-        releaseYear: movie.releaseYear,
+        releaseYear: movie.releaseYear || new Date().getFullYear().toString(),
         rating: movie.rating || ''
     });
 
@@ -71,13 +71,12 @@ function MovieCard({
         }
     };
 
-    // Update the handleEdit function to load current data
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation();
         setEditData({
-            title: displayMovie.title,
+            title: displayMovie.title || '',
             desc: displayMovie.desc || '',
-            releaseYear: displayMovie.releaseYear,
+            releaseYear: displayMovie.releaseYear || new Date().getFullYear().toString(),
             rating: displayMovie.rating || ''
         });
         setIsEditing(true);
@@ -88,6 +87,18 @@ function MovieCard({
         try {
             await onUpdate?.(movie.id, editData);
             setIsEditing(false);
+            
+            if (onHover) {
+                await onHover(movie.id);
+            }
+            
+            // Update the local state with new data
+            if (detailedData) {
+                detailedData = {
+                    ...detailedData,
+                    ...editData
+                };
+            }
         } catch (error) {
             console.error('Error saving movie:', error);
         }
@@ -151,9 +162,14 @@ function MovieCard({
                     />
                     <input
                         type="number"
-                        value={editData.releaseYear}
-                        onChange={e => setEditData(prev => ({ ...prev, releaseYear: e.target.value }))}
+                        value={editData.releaseYear || ''}
+                        onChange={e => setEditData(prev => ({ 
+                            ...prev, 
+                            releaseYear: e.target.value || new Date().getFullYear().toString()
+                        }))}
                         placeholder="Release Year"
+                        min="1900"
+                        max={new Date().getFullYear()}
                     />
                     <select
                         value={editData.rating}

@@ -5,7 +5,7 @@ export function useMovieUpdate() {
     const updateMovie = async (movieId: number, updatedData: Partial<Movie>) => {
         try {
             const response = await fetch(`${API_URL}/films/${movieId}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
