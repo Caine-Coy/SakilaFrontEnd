@@ -7,7 +7,7 @@ interface UseMovieDeleteProps {
 export function useMovieDelete({ onMovieDeleted }: UseMovieDeleteProps) {
     const deleteMovie = useCallback(async (movieId: number) => {
         try {
-            const response = await fetch(API_URL + "/films/${movieId}", {
+            const response = await fetch(`${API_URL}/films/${movieId}`, {
                 method: 'DELETE'
             });
             
