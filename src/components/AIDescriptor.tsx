@@ -49,13 +49,13 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
 
                     const prompt = `Create a fun, imaginative synopsis for this movie in 2-3 sentences: "${movie.title}" (${movie.releaseYear}).
                     The movie is rated ${movie.rating} and is about: ${movie.desc}
-                    The movie stars are ${actorNames}. Please come up with clever made up names for the characters mentioned, but then credit the stars for their roles in brackets.`;
+                    The movie stars are ${actorNames}. `;
 
                     const completion = await openai.chat.completions.create({
                         messages: [
                             {
                                 role: "system",
-                                content: "You are a creative movie expert who provides entertaining and imaginative movie descriptions. Create an engaging description that mentions the cast."
+                                content: "You are a creative movie expert who provides entertaining and imaginative movie descriptions. Create an engaging description that mentions the cast but try not to repeat yourself. Please come up with clever made up names for the characters mentioned, but then credit the stars for their roles in brackets."
                             },
                             {
                                 role: "user",
@@ -88,7 +88,7 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
 
     return (
         <div className="ai-descriptor">
-            <h1>{movie ? 'AI Movie Synopsis' : 'Movie Recommendation'}</h1>
+            <h3>AI Movie Synopsis</h3>
             {error && <p className="error">{error}</p>}
             {isLoading ? (
                 <p>Generating content...</p>
