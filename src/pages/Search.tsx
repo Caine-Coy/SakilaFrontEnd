@@ -3,12 +3,14 @@ import { MovieWithActors, useMovieData } from '../hooks/useMovieData';
 import { useMovieDelete } from '../hooks/useMovieDelete';
 import MovieCard from '../components/MovieCard';
 import './Search.css';
+import { Movie } from '../types/Movie';
+import { useMovieUpdate } from '../hooks/useMovieUpdate';
 
 function Search({ isAdmin = false }) {
     const [query, setQuery] = useState('');
-    //all of these variables are coming from useMovieData
     const { movies, isLoading, error, getDetailedMovie, removeMovie } = useMovieData();
     const [detailedMovies, setDetailedMovies] = useState<Record<number, MovieWithActors>>({});
+    const { updateMovie } = useMovieUpdate(); // Move hook to top level
 
     const { deleteMovie } = useMovieDelete({
         onMovieDeleted: (movieId: number) => {
@@ -31,6 +33,31 @@ function Search({ isAdmin = false }) {
             } catch (error) {
                 console.error('Error loading detailed movie:', error);
             }
+        }
+    };
+
+    const handleMovieUpdate = async (movieId: number, updatedData: Partial<Movie>) => {
+        try {
+            // Update the movie in the database
+            await updateMovie(movieId, updatedData);
+            
+            // Update the local state
+            setDetailedMovies(prev => ({
+                ...prev,
+                [movieId]: {
+                    ...prev[movieId],
+                    ...updatedData
+                }
+            }));
+
+            // Refresh the detailed data
+            const updated = await getDetailedMovie(movieId);
+            setDetailedMovies(prev => ({
+                ...prev,
+                [movieId]: updated
+            }));
+        } catch (error) {
+            console.error('Error updating movie:', error);
         }
     };
 
@@ -62,6 +89,7 @@ function Search({ isAdmin = false }) {
                             detailedData={detailedMovies[movie.id]}
                             isAdmin={isAdmin}
                             onDelete={deleteMovie}
+                            onUpdate={handleMovieUpdate} // Add this prop
                         />
                     ))}
                     {filteredMovies.length === 0 && (

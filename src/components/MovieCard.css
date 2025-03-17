@@ -105,17 +105,21 @@
 }
 
 .delete-button {
-    position: absolute;
+    position: relative; /* Changed from absolute */
     width: 24px;
     height: 24px;
     border-radius: 50%;
     background-color: #ff4444;
     color: white;
+    display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
     line-height: 1;
     padding: 0;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
     
     z-index: 3;
 }
@@ -123,5 +127,91 @@
 .delete-button:hover {
     opacity: 1;
     background-color: #ff0000;
+    transform: scale(1.1);
+}
+
+.admin-controls {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.5rem;  
+    z-index: 3;
+}
+
+.edit-button {
+    position: relative; /* Added position */
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #7c4dff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit-button:hover {
+    background-color: #651fff;
+    transform: scale(1.1);
+}
+
+.edit-form {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 8px;
+    border: 1px solid #7c4dff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    z-index: 10;
+}
+
+.edit-form input,
+.edit-form textarea,
+.edit-form select {
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid #7c4dff;
+    background: rgba(255, 255, 255, 0.95);
+    color: black;
+    font-size: 1rem;
+}
+
+.edit-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.edit-buttons button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-buttons button[type="submit"] {
+    background-color: #7c4dff;
+    color: white;
+}
+
+.edit-buttons button[type="button"] {
+    background-color: transparent;
+    border: 1px solid #7c4dff;
 }
 

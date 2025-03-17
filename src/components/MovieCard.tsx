@@ -4,6 +4,8 @@ import './MovieCard.css';
 import { Movie } from "../types/Movie";
 import { Actor } from "../types/Actor";
 import AIDescriptor from './AIDescriptor';
+import { FaPen } from 'react-icons/fa';
+import MovieForm from './MovieForm';
 
 interface MovieCardProps {
     movie: Movie;
@@ -13,6 +15,7 @@ interface MovieCardProps {
     detailedData?: MovieWithActors;
     isAdmin?: boolean;
     onDelete?: (movieId: number) => Promise<void>;
+    onUpdate?: (movieId: number, updatedData: Partial<Movie>) => Promise<void>;
 }
 
 function MovieCard({
@@ -22,11 +25,19 @@ function MovieCard({
     onHover,
     detailedData,
     isAdmin = false,
-    onDelete
+    onDelete,
+    onUpdate
 }: MovieCardProps) {
 
-    const [isExpanded, setIsExpanded] = useState(false); 
-    
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editData, setEditData] = useState({
+        title: movie.title || '',
+        desc: movie.desc || '',
+        releaseYear: movie.releaseYear || new Date().getFullYear().toString(),
+        rating: movie.rating || ''
+    });
+
     const handleExpand = async () => {
         if (!featured && onHover && !isExpanded) {
             await onHover(movie.id);
@@ -61,6 +72,17 @@ function MovieCard({
         }
     };
 
+    const handleEdit = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setEditData({
+            title: displayMovie.title || '',
+            desc: displayMovie.desc || '',
+            releaseYear: displayMovie.releaseYear || new Date().getFullYear().toString(),
+            rating: displayMovie.rating || ''
+        });
+        setIsEditing(true);
+    };
+
     const generatePosterColors = (title: string) => {
 
         //Splits the title into an array of characters, then reduces it to a single value
@@ -85,49 +107,76 @@ function MovieCard({
             onTouchEnd={handleTouchEnd}
             style={{ cursor: 'pointer' }}
         >
-            {isAdmin && (
-                <button
-                    className={`${movie.title} delete-button`}
-                    onClick={handleDelete}
-                    title="Delete Movie"
-                >
-                    ×
-                </button>
-            )}
-            {(featured || isExpanded) && (
-                <div
-                    className="movie-poster"
-                    style={{
-                        background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`
-                    }}
-                >
-                    <div className="poster-content">
-                        <h2>{displayMovie.title}</h2>
-                        <div className="poster-year">{displayMovie.releaseYear}</div>
-                    </div>
+            {isAdmin && (featured || isExpanded) && (
+                <div className="admin-controls">
+                    <button
+                        className="edit-button"
+                        onClick={handleEdit}
+                        title="Edit Movie"
+                    >
+                        <FaPen size={14} />
+                    </button>
+                    <button
+                        className={`${movie.title} delete-button`}
+                        onClick={handleDelete}
+                        title="Delete Movie"
+                    >
+                        ×
+                    </button>
                 </div>
             )}
 
-            <div className="movie-details">
-                {!featured && !isExpanded && (
-                    <><h2>{displayMovie.title}</h2><p>Released: {displayMovie.releaseYear}</p></>
-                )}
-                {displayMovie.desc && <p>{displayMovie.desc}</p>}
-                {(featured && <AIDescriptor movie={movie}/>)}
-                {displayMovie.rating && <p>Age Rating: {displayMovie.rating}</p>}
-                {(featured || isExpanded) && actors && (
-                    <div className="actors-section">
-                        <h3>Cast:</h3>
-                        <ul>
-                            {actors.map(actor => (
-                                <li key={actor.id}>
-                                    {actor.firstName} {actor.lastName}
-                                </li>
-                            ))}
-                        </ul>
+            {isEditing ? (
+                <MovieForm
+                    initialData={displayMovie}
+                    onSubmit={async (data) => {
+                        await onUpdate?.(movie.id, { ...data, releaseYear: data.releaseYear.toString() });
+                        setIsEditing(false);
+                        if (onHover) {
+                            await onHover(movie.id);
+                        }
+                    }}
+                    onCancel={() => setIsEditing(false)}
+                    isEdit={true}
+                />
+            ) : (
+                <>
+                    {(featured || isExpanded) && (
+                        <div
+                            className="movie-poster"
+                            style={{
+                                background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`
+                            }}
+                        >
+                            <div className="poster-content">
+                                <h2>{displayMovie.title}</h2>
+                                <div className="poster-year">{displayMovie.releaseYear}</div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="movie-details">
+                        {!featured && !isExpanded && (
+                            <><h2>{displayMovie.title}</h2><p>Released: {displayMovie.releaseYear}</p></>
+                        )}
+                        {displayMovie.desc && <p>{displayMovie.desc}</p>}
+                        {(featured && <AIDescriptor movie={movie} />)}
+                        {displayMovie.rating && <p>Age Rating: {displayMovie.rating}</p>}
+                        {(featured || isExpanded) && actors && (
+                            <div className="actors-section">
+                                <h3>Cast:</h3>
+                                <ul>
+                                    {actors.map(actor => (
+                                        <li key={actor.id}>
+                                            {actor.firstName} {actor.lastName}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
+                </>
+            )}
         </div>
     );
 }
