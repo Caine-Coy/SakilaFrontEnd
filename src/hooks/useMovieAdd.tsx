@@ -2,11 +2,12 @@ import { API_URL } from '../components/config';
 
 interface MovieFormData {
     title: string;
-    desc: string;
-    releaseYear: string;
-    languageID: number;
-    length: number;
-    rating: string;
+    description: string;
+    releaseYear: number;
+    languageId: number;
+    originalLanguageID: number;
+    rating?: string;
+    length?: number;
 }
 
 export function useMovieAdd() {
@@ -16,6 +17,7 @@ export function useMovieAdd() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(movieData)
             });

@@ -5,6 +5,7 @@ import { Movie } from "../types/Movie";
 import { Actor } from "../types/Actor";
 import AIDescriptor from './AIDescriptor';
 import { FaPen } from 'react-icons/fa';
+import MovieForm from './MovieForm';
 
 interface MovieCardProps {
     movie: Movie;
@@ -28,7 +29,7 @@ function MovieCard({
     onUpdate
 }: MovieCardProps) {
 
-    const [isExpanded, setIsExpanded] = useState(false); 
+    const [isExpanded, setIsExpanded] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({
         title: movie.title || '',
@@ -82,28 +83,6 @@ function MovieCard({
         setIsEditing(true);
     };
 
-    const handleSave = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            await onUpdate?.(movie.id, editData);
-            setIsEditing(false);
-            
-            if (onHover) {
-                await onHover(movie.id);
-            }
-            
-            // Update the local state with new data
-            if (detailedData) {
-                detailedData = {
-                    ...detailedData,
-                    ...editData
-                };
-            }
-        } catch (error) {
-            console.error('Error saving movie:', error);
-        }
-    };
-
     const generatePosterColors = (title: string) => {
 
         //Splits the title into an array of characters, then reduces it to a single value
@@ -148,48 +127,21 @@ function MovieCard({
             )}
 
             {isEditing ? (
-                <form onSubmit={handleSave} className="edit-form" onClick={e => e.stopPropagation()}>
-                    <input
-                        type="text"
-                        value={editData.title}
-                        onChange={e => setEditData(prev => ({ ...prev, title: e.target.value }))}
-                        placeholder="Title"
-                    />
-                    <textarea
-                        value={editData.desc}
-                        onChange={e => setEditData(prev => ({ ...prev, desc: e.target.value }))}
-                        placeholder="Description"
-                    />
-                    <input
-                        type="number"
-                        value={editData.releaseYear || ''}
-                        onChange={e => setEditData(prev => ({ 
-                            ...prev, 
-                            releaseYear: e.target.value || new Date().getFullYear().toString()
-                        }))}
-                        placeholder="Release Year"
-                        min="1900"
-                        max={new Date().getFullYear()}
-                    />
-                    <select
-                        value={editData.rating}
-                        onChange={e => setEditData(prev => ({ ...prev, rating: e.target.value }))}
-                    >
-                        <option value="">Select Rating</option>
-                        <option value="G">G</option>
-                        <option value="PG">PG</option>
-                        <option value="PG-13">PG-13</option>
-                        <option value="R">R</option>
-                        <option value="NC-17">NC-17</option>
-                    </select>
-                    <div className="edit-buttons">
-                        <button type="submit">Save</button>
-                        <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
-                    </div>
-                </form>
+                <MovieForm
+                    initialData={displayMovie}
+                    onSubmit={async (data) => {
+                        await onUpdate?.(movie.id, { ...data, releaseYear: data.releaseYear.toString() });
+                        setIsEditing(false);
+                        if (onHover) {
+                            await onHover(movie.id);
+                        }
+                    }}
+                    onCancel={() => setIsEditing(false)}
+                    isEdit={true}
+                />
             ) : (
                 <>
-                      {(featured || isExpanded) && (
+                    {(featured || isExpanded) && (
                         <div
                             className="movie-poster"
                             style={{
@@ -208,7 +160,7 @@ function MovieCard({
                             <><h2>{displayMovie.title}</h2><p>Released: {displayMovie.releaseYear}</p></>
                         )}
                         {displayMovie.desc && <p>{displayMovie.desc}</p>}
-                        {(featured && <AIDescriptor movie={movie}/>)}
+                        {(featured && <AIDescriptor movie={movie} />)}
                         {displayMovie.rating && <p>Age Rating: {displayMovie.rating}</p>}
                         {(featured || isExpanded) && actors && (
                             <div className="actors-section">
