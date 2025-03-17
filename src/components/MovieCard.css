@@ -160,32 +160,58 @@
 }
 
 .edit-form {
-    padding: 1rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     border-radius: 8px;
+    border: 1px solid #7c4dff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    z-index: 10;
 }
 
 .edit-form input,
 .edit-form textarea,
 .edit-form select {
-    padding: 0.5rem;
+    padding: 0.75rem;
     border-radius: 4px;
     border: 1px solid #7c4dff;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     color: black;
+    font-size: 1rem;
+}
+
+.edit-form textarea {
+    min-height: 100px;
+    resize: vertical;
 }
 
 .edit-buttons {
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
+    margin-top: 1rem;
 }
 
 .edit-buttons button {
     padding: 0.5rem 1rem;
     border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-buttons button[type="submit"] {
+    background-color: #7c4dff;
+    color: white;
+}
+
+.edit-buttons button[type="button"] {
+    background-color: transparent;
+    border: 1px solid #7c4dff;
 }
 

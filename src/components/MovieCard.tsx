@@ -71,8 +71,15 @@ function MovieCard({
         }
     };
 
+    // Update the handleEdit function to load current data
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation();
+        setEditData({
+            title: displayMovie.title,
+            desc: displayMovie.desc || '',
+            releaseYear: displayMovie.releaseYear,
+            rating: displayMovie.rating || ''
+        });
         setIsEditing(true);
     };
 
@@ -110,7 +117,7 @@ function MovieCard({
             onTouchEnd={handleTouchEnd}
             style={{ cursor: 'pointer' }}
         >
-            {isAdmin && (
+            {isAdmin && (featured || isExpanded) && (
                 <div className="admin-controls">
                     <button
                         className="edit-button"
