@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useMovieAdd } from '../hooks/useMovieAdd';
 import MovieForm from '../components/MovieForm';
 import './AddMovie.css';

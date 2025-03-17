@@ -31,12 +31,6 @@ function MovieCard({
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [editData, setEditData] = useState({
-        title: movie.title || '',
-        desc: movie.desc || '',
-        releaseYear: movie.releaseYear || new Date().getFullYear().toString(),
-        rating: movie.rating || ''
-    });
 
     const handleExpand = async () => {
         if (!featured && onHover && !isExpanded) {
@@ -74,12 +68,6 @@ function MovieCard({
 
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation();
-        setEditData({
-            title: displayMovie.title || '',
-            desc: displayMovie.desc || '',
-            releaseYear: displayMovie.releaseYear || new Date().getFullYear().toString(),
-            rating: displayMovie.rating || ''
-        });
         setIsEditing(true);
     };
 
