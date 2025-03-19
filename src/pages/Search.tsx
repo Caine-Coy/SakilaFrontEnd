@@ -38,7 +38,6 @@ function Search({ isAdmin = false }) {
 
     const handleMovieUpdate = async (movieId: number, updatedData: Partial<Movie>) => {
         try {
-            // Update the movie in the database
             await updateMovie(movieId, updatedData);
             
             // Update the local state
@@ -50,7 +49,6 @@ function Search({ isAdmin = false }) {
                 }
             }));
 
-            // Refresh the detailed data
             const updated = await getDetailedMovie(movieId);
             setDetailedMovies(prev => ({
                 ...prev,
@@ -89,7 +87,7 @@ function Search({ isAdmin = false }) {
                             detailedData={detailedMovies[movie.id]}
                             isAdmin={isAdmin}
                             onDelete={deleteMovie}
-                            onUpdate={handleMovieUpdate} // Add this prop
+                            onUpdate={handleMovieUpdate}
                         />
                     ))}
                     {filteredMovies.length === 0 && (

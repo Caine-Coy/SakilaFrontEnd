@@ -2,7 +2,6 @@ import { useMovieAdd } from '../hooks/useMovieAdd';
 import MovieForm from '../components/MovieForm';
 import './AddMovie.css';
 
-// Update interface to match the API format
 interface MovieFormData {
     title: string;
     description: string;

@@ -6,11 +6,11 @@ import { Movie } from '../types/Movie';
 interface MovieFormData {
     id?: number;
     title: string;
-    description: string; // Changed from desc
-    releaseYear: number; // Changed to number
-    languageId: number; // Changed from languageID
+    description: string; 
+    releaseYear: number;
+    languageId: number; 
     originalLanguageID: number;
-    rating?: string; // Optional fields at the end
+    rating?: string; 
     length?: number;
 }
 
@@ -24,7 +24,7 @@ interface MovieFormProps {
 function MovieForm({ initialData, onSubmit, onCancel, isEdit = false }: MovieFormProps) {
     const defaultData: MovieFormData = {
         title: '',
-        description: '', // Changed from desc
+        description: '', 
         releaseYear: new Date().getFullYear(),
         languageId: 1,
         originalLanguageID: 1,
