@@ -5,7 +5,7 @@ function About() {
         { name: "React", description: "A JavaScript library for building user interfaces" },
         { name: "TypeScript", description: "Typed JavaScript for better development experience" },
         { name: "Vite", description: "Next generation frontend tooling" },
-        { name: "OpenAI SDK", description: "For AI-powered movie descriptions" },
+        { name: "OpenAI SDK", description: "To communicate with a local LLM" },
         { name: "LM Studio", description: "Local LLM integration for AI features" },
         { name: "React Icons", description: "Popular icons in React projects" },
     ];
