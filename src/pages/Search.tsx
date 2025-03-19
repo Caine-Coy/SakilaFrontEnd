@@ -10,7 +10,7 @@ function Search({ isAdmin = false }) {
     const [query, setQuery] = useState('');
     const { movies, isLoading, error, getDetailedMovie, removeMovie } = useMovieData();
     const [detailedMovies, setDetailedMovies] = useState<Record<number, MovieWithActors>>({});
-    const { updateMovie } = useMovieUpdate(); // Move hook to top level
+    const { updateMovie } = useMovieUpdate(); 
 
     const { deleteMovie } = useMovieDelete({
         onMovieDeleted: (movieId: number) => {
@@ -20,7 +20,6 @@ function Search({ isAdmin = false }) {
                 delete updatedMovies[movieId];
                 return updatedMovies;
             });
-            // Remove from undetailed movies list
             removeMovie(movieId);
         }
     });

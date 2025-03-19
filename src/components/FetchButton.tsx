@@ -21,7 +21,6 @@ function FetchButton() {
                 console.error('Error:', error);
                 setRandomMovie(selectedMovie);
             } finally {
-                //once finished.
                 setIsLoadingDetails(false);
             }
         }
