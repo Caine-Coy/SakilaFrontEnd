@@ -22,7 +22,7 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
             try {
                 setIsLoading(true);
                 setError(null);
-                
+
                 const openai = new OpenAI({
                     apiKey: 'sk-no-key-required',
                     baseURL: LLM_URL,
@@ -84,7 +84,7 @@ function AIDescriptor({ movie }: AIDescriptorProps) {
         };
 
         generateMessage();
-    }, [movie, isInitialized]); // Added isInitialized to dependencies
+    }, [movie, isInitialized]);
 
     return (
         <div className="ai-descriptor">
